@@ -1,0 +1,22 @@
+$(document).ready(function(){
+  $("#formActualizar").submit(function(event){
+    $.ajax({
+      url:$(this).attr("action"),type:$(this).attr("method"),dataType:"json",data:$(this).serialize(),cache:false,
+      beforeSend:function(){$("#ajaxLoader").show();$('#alertDanger').hide();$('#alertSuccess').hide();$("#btnEnviar").prop("disabled",true);},
+      success:function(result){
+        $("#ajaxLoader").fadeOut('slow',function(){
+          if(result.estatus){
+            $('#alertSuccess').show();
+            $('#alertSuccessText').text(result.msg);
+            setTimeout(function(){ window.location = result.url+"index.php/login"; },3000);
+          }else{
+            $('#alertDanger').show();
+            $('#alertDangerText').text(result.msg);
+            $("#btnEnviar").prop("disabled",false);
+          }
+        });
+      }
+    });
+    event.preventDefault();
+  });
+});

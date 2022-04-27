@@ -1,0 +1,72 @@
+<script type="text/javascript">
+	var x = parseInt('<?=$pagina;?>');
+	var search = $("#BUSCADOR_DATA_TABLES").val();
+	var tableP=$("#tabla_preguntas").DataTable({"search":{"search":search},"aaSorting":[],"columnDefs":[{"targets":[10],"orderable":false}],"iDisplayLength":100,"columns":[{"width":"50px"},null,null,null,null,null,null,null,null],"displayStart":x,"dom":'<"top"i>rf<"bottom"tlp><"clear">'});
+	$('#tabla_preguntas').on('search.dt', function() {
+    	var value = $('.dataTables_filter input').val();
+    	$("#BUSCADOR_DATA_TABLES").val(value);
+	});
+</script>
+<table class="table table-striped table-condensed" id="tabla_preguntas">
+	<thead>
+		<th>Caso</th>
+		<th>Caso_s</th>
+		<th>No.</th>
+		<th>Pregunta_s</th>
+		<th>Acción</th>
+		<th>Pregunta</th>
+		<th>Puntos_clave</th>
+		<th>DIF</th>
+		<th>DIS</th>
+		<th>Revisión</th>
+		<th></th>
+	</thead>
+	<tbody>
+		<?php
+			$dif = '';
+			$dis = '';
+			foreach ($preguntas as $value){
+
+				$dif = $value['analisis_dif'];
+				$dis = $value['analisis_dis'];
+				if( $dif >= 700 && $dif <= 850 ){
+					$dif='rojo';
+				}elseif( $dif > 850 && $dif <= 1000 ){
+					$dif='amarillo';
+				}elseif( $dif > 1000 && $dif <= 1150 ){
+					$dif='verde';
+				}elseif( $dif > 1150 && $dif <= 1300 ){
+					$dif='verdeFuerte';
+				}
+
+				if( $dis <= 0.79 ){
+					$dis='rojo';
+				}elseif( $dis > 0.79 && $dis <= 0.99 ){
+					$dis='amarillo';
+				}elseif( $dis > 0.99 ){
+					$dis='verdeFuerte';
+				}
+
+				$createDate = new DateTime( $value['fecha_hora_modificacion'] );
+				echo '
+				<tr>
+			    <td>'.$value['id_caso'].'</td>
+			    <td>'.$value['st'].'</td>
+			    <td>'.$value['numeracion'].'</td>
+			    <td>'.$value['examen_banco'].'</td>
+			    <td>'.$value['accion'].'</td>
+			    <td>'.$value['pregunta'].'</td>
+			    <td>'.$value['pc'].'</td>
+			    <td> <i class="glyphicon glyphicon-record '.$dif.'"></i> </td>
+			    <td> <i class="glyphicon glyphicon-record '.$dis.'"></i> </td>
+			    <td>'.$createDate->format('Y-m-d').'</td>
+			    <td>
+			    	<i class="glyphicon glyphicon-edit" style="cursor:pointer;" onClick="editarPregunta('.$value['id_pregunta'].','.$value['id_caso'].',\''.str_replace('P','',$value['numeracion']).'\')"></i>
+			    	'.(($this->session->rol=="admin")?'<i class="glyphicon glyphicon-trash" style="cursor:pointer;" onclick="delRow('.$value['id_pregunta'].',\'preguntas\',\'updContenedorPreguntas\',0)"></i>':null).'
+			    	
+			    </td>
+			  </tr>';
+			}
+		?>
+	</tbody>
+</table>

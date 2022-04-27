@@ -1,0 +1,14 @@
+html{position:relative;min-height:100%;}
+body{margin-top:20px;margin-bottom:263px;}
+.footer-link{
+  color:#fff;
+  font-size:12px;
+}
+.footer {
+  height:263px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color:#464648;
+  color:#fff;
+}
